@@ -61,11 +61,12 @@ export function SettingsView({
   toggles: Record<string, boolean>;
   onToggle: (key: string) => void;
 }) {
-  const rows = [
+  const rows: [string, string, string][] = [
     ["sound", "Signal Sound", "Play a beep on each new signal"],
     ["popup", "Auto Signal Popup", "Show the full-screen signal alert"],
     ["vibration", "Vibration", "Vibrate device on signal"],
   ];
+
   return (
     <section className="panel-glow rounded-2xl p-4">
       <h2 className="mb-3 flex items-center gap-2 text-lg font-bold neon-cyan">
