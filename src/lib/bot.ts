@@ -1,5 +1,5 @@
 export const TELEGRAM_URL = "https://t.me/mnatraderofficial12";
-export const BROKER_URL = "https://broker-qx.pro/sign-up/?lid=1211776";
+export const BROKER_URL = "https://broker-qx.pro/sign-up/?lid=2103061";
 export const BRAND = "MNA TRADER";
 export const SERVER_ID = "MNA-01";
 
