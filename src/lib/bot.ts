@@ -132,7 +132,10 @@ export function sparkline(seed: number, up: boolean): string {
     const noise = Math.sin((seed + i) * 1.7) * 6;
     const trend = up ? -i * 2.2 : i * 2.2;
     const y = 32 + trend + noise;
-    points.push(`${(i / steps) * 160},${Math.max(4, Math.min(56, y + (up ? 12 : -12)))}`);
+    const x = ((i / steps) * 160).toFixed(2);
+    const cy = Math.max(4, Math.min(56, y + (up ? 12 : -12))).toFixed(2);
+    points.push(`${x},${cy}`);
   }
+
   return points.join(" ");
 }
