@@ -79,15 +79,21 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
     meta: [
       { charSet: "utf-8" },
       { name: "viewport", content: "width=device-width, initial-scale=1" },
-      { title: "MNA Trader — AI Signal Bot" },
+      { title: "MNA Trader — AI Signal Bot for Pocket Option" },
       {
         name: "description",
-        content: "MNA Trader AI signal bot for Pocket Option OTC and live markets.",
+        content: "MNA Trader AI signal bot: live OTC and market signals for Pocket Option with 56 pairs, strategy scanner and instant Telegram access.",
       },
       { name: "author", content: "MNA Trader" },
       { property: "og:site_name", content: "MNA Trader" },
       { property: "og:type", content: "website" },
       { name: "twitter:card", content: "summary_large_image" },
+      { property: "og:title", content: "MNA Trader — AI Signal Bot for Pocket Option" },
+      { name: "twitter:title", content: "MNA Trader — AI Signal Bot for Pocket Option" },
+      { property: "og:description", content: "MNA Trader AI signal bot: live OTC and market signals for Pocket Option with 56 pairs, strategy scanner and instant Telegram access." },
+      { name: "twitter:description", content: "MNA Trader AI signal bot: live OTC and market signals for Pocket Option with 56 pairs, strategy scanner and instant Telegram access." },
+      { property: "og:image", content: "https://pub-bb2e103a32db4e198524a2e9ed8f35b4.r2.dev/a7cbc5d5-9d61-4b62-a637-4334c799bf11/id-preview-7371322a--cc95ba5f-19bb-48d4-aa85-a527d743ea05.lovable.app-1785662813401.png" },
+      { name: "twitter:image", content: "https://pub-bb2e103a32db4e198524a2e9ed8f35b4.r2.dev/a7cbc5d5-9d61-4b62-a637-4334c799bf11/id-preview-7371322a--cc95ba5f-19bb-48d4-aa85-a527d743ea05.lovable.app-1785662813401.png" },
     ],
     links: [
       {

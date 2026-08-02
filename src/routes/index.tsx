@@ -30,7 +30,7 @@ export const Route = createFileRoute("/")({
       {
         property: "og:description",
         content:
-          "Free AI-powered OTC trading signals with 90%+ accuracy scanning. Join the MNA Trader Telegram channel.",
+          "MNA Trader AI signal bot: live OTC and market signals for Pocket Option with 56 pairs, strategy scanner and instant Telegram access.",
       },
       { property: "og:type", content: "website" },
       { property: "og:url", content: "/" },
