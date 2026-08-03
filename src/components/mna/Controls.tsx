@@ -1,26 +1,22 @@
 import { Box, ChevronDown, Zap, Play, Target } from "lucide-react";
-import { PAIRS, SERVER_ID, TIMEFRAMES, RISKS, type Risk } from "@/lib/bot";
+import { BROKERS, PAIRS, SERVER_ID, TIMEFRAMES, RISKS, type Broker, type Risk } from "@/lib/bot";
 
-export function MarketModes({
-  mode,
-  onMode,
+export function BrokerSelect({
+  broker,
+  onBroker,
 }: {
-  mode: "otc" | "live";
-  onMode: (m: "otc" | "live") => void;
+  broker: Broker;
+  onBroker: (broker: Broker) => void;
 }) {
-  const items = [
-    { id: "otc" as const, title: "OTC MARKET", sub: "3s - 15m" },
-    { id: "live" as const, title: "LIVE MARKET", sub: "1m - 15m" },
-  ];
   return (
     <div className="grid grid-cols-2 gap-3">
-      {items.map((it) => {
-        const active = mode === it.id;
+      {BROKERS.map((item) => {
+        const active = broker === item;
         return (
           <button
-            key={it.id}
+            key={item}
             type="button"
-            onClick={() => onMode(it.id)}
+            onClick={() => onBroker(item)}
             className={`panel-glow flex items-center gap-2 rounded-xl px-3 py-4 text-left ${
               active ? "border-primary! ring-1 ring-primary/60" : ""
             }`}
@@ -32,9 +28,9 @@ export function MarketModes({
               <span
                 className={`block truncate text-sm font-bold ${active ? "neon-cyan" : "text-foreground"}`}
               >
-                {it.title}
+                {item}
               </span>
-              <span className="block text-[10px] text-muted-foreground">{it.sub}</span>
+              <span className="block text-[10px] text-muted-foreground">1m - 1h</span>
             </span>
           </button>
         );
@@ -43,7 +39,7 @@ export function MarketModes({
   );
 }
 
-export function BrokerStatus() {
+export function BrokerStatus({ broker }: { broker: Broker }) {
   return (
     <div className="grid grid-cols-2 gap-3">
       <div className="panel-glow rounded-xl px-3 py-3">
@@ -52,8 +48,7 @@ export function BrokerStatus() {
           <span className="grid size-5 place-items-center rounded bg-primary/20 text-[10px] font-bold text-primary">
             P
           </span>
-          <span className="flex-1 text-sm font-bold">POCKET OPTION</span>
-          <ChevronDown className="size-4 text-muted-foreground" />
+          <span className="flex-1 text-sm font-bold">{broker}</span>
         </div>
       </div>
       <div className="panel-glow rounded-xl px-3 py-3">
@@ -68,13 +63,7 @@ export function BrokerStatus() {
   );
 }
 
-export function PairSelect({
-  pair,
-  onChange,
-}: {
-  pair: string;
-  onChange: () => void;
-}) {
+export function PairSelect({ pair, onChange }: { pair: string; onChange: () => void }) {
   return (
     <button
       type="button"
@@ -85,10 +74,10 @@ export function PairSelect({
         <Target className="size-4" />
       </span>
       <span className="min-w-0 flex-1">
-        <span className="block text-[10px] tracking-widest text-muted-foreground">SELECTED PAIR</span>
-        <span className="block truncate font-display text-xl font-bold neon-cyan">
-          {pair} <span className="text-xs text-muted-foreground">(OTC)</span>
+        <span className="block text-[10px] tracking-widest text-muted-foreground">
+          SELECTED PAIR
         </span>
+        <span className="block truncate font-display text-xl font-bold neon-cyan">{pair}</span>
       </span>
       <span className="flex items-center gap-1 text-xs font-bold tracking-widest text-primary">
         CHANGE <ChevronDown className="size-3" />
@@ -171,7 +160,11 @@ export function PairPicker({
       <div className="panel-glow max-h-[75vh] w-full overflow-y-auto rounded-t-2xl p-4">
         <div className="mb-3 flex items-center justify-between">
           <h3 className="text-lg font-bold neon-cyan">SELECT PAIR</h3>
-          <button type="button" onClick={onClose} className="text-xs tracking-widest text-muted-foreground">
+          <button
+            type="button"
+            onClick={onClose}
+            className="text-xs tracking-widest text-muted-foreground"
+          >
             CLOSE
           </button>
         </div>
@@ -188,7 +181,7 @@ export function PairPicker({
             >
               <span className="block text-sm font-bold">{p.symbol}</span>
               <span className={`block text-[10px] ${p.up ? "text-up" : "text-down"}`}>
-                OTC {p.win}%
+                Signal confidence {p.win}%
               </span>
             </button>
           ))}
@@ -198,13 +191,7 @@ export function PairPicker({
   );
 }
 
-export function StartButton({
-  running,
-  onStart,
-}: {
-  running: boolean;
-  onStart: () => void;
-}) {
+export function StartButton({ running, onStart }: { running: boolean; onStart: () => void }) {
   return (
     <div className="mt-4">
       <button

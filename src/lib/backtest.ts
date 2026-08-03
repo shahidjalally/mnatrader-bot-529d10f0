@@ -15,12 +15,12 @@ export type BacktestReport = {
 };
 
 const BACKTEST_PAIRS: [string, number, number][] = [
-  ["EUR/USD", 2011, 68],
-  ["GBP/USD", 2011, 66],
-  ["USD/JPY", 2012, 67],
-  ["AUD/USD", 2013, 65],
-  ["USD/CAD", 2011, 64],
-  ["EUR/JPY", 2012, 69],
+  ["EUR/USD", 2026, 68],
+  ["GBP/USD", 2026, 66],
+  ["USD/JPY", 2026, 67],
+  ["AUD/USD", 2026, 65],
+  ["USD/CAD", 2026, 64],
+  ["EUR/JPY", 2026, 69],
 ];
 
 function rand(seed: number): number {
@@ -29,7 +29,7 @@ function rand(seed: number): number {
 }
 
 function build(pair: string, from: number, base: number, index: number): BacktestReport {
-  const to = 2025;
+  const to = 2026;
   const years: BacktestYear[] = [];
   for (let y = from; y <= to; y++) {
     const s = index * 97 + y;

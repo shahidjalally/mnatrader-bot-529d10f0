@@ -1,6 +1,6 @@
 # MNA Trader
 
-MNA Trader is an AI-style trading signal dashboard for Pocket Option. It includes OTC and live market views, a strategy scanner, signal history, analytics, backtesting, and direct access to the MNA Trader Telegram channel.
+MNA Trader is an AI-style trading signal dashboard for Quotex and Tradevix. It includes 20 major currency pairs, forex and binary strategies, signal history, analytics, backtesting, and direct access to the MNA Trader Telegram channel.
 
 ## Live website
 

@@ -1,10 +1,10 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { useCallback, useEffect, useRef, useState } from "react";
 
-import { AppHeader, Ticker } from "@/components/mna/Header";
+import { AppHeader } from "@/components/mna/Header";
 import {
   BrokerStatus,
-  MarketModes,
+  BrokerSelect,
   PairPicker,
   PairSelect,
   StartButton,
@@ -16,22 +16,30 @@ import { AnalyticsView, SettingsView, ThemePicker } from "@/components/mna/Views
 import { BacktestView } from "@/components/mna/Backtest";
 import { BottomNav, type Tab } from "@/components/mna/BottomNav";
 import { LicenseGate, MenuSheet } from "@/components/mna/LicenseGate";
-import { BRAND, PAIRS, SCANNER_STEPS, timeframeSeconds, type Risk, type Signal } from "@/lib/bot";
+import {
+  BRAND,
+  PAIRS,
+  SCANNER_STEPS,
+  timeframeSeconds,
+  type Broker,
+  type Risk,
+  type Signal,
+} from "@/lib/bot";
 
 export const Route = createFileRoute("/")({
   head: () => ({
     meta: [
-      { title: "MNA Trader — AI Signal Bot for Pocket Option" },
+      { title: "MNA Trader — AI Signals for Quotex and Tradevix" },
       {
         name: "description",
         content:
-          "MNA Trader AI signal bot: live OTC and market signals for Pocket Option with 56 pairs, strategy scanner and instant Telegram access.",
+          "MNA Trader AI signal bot for Quotex and Tradevix with 20 major currency pairs, forex and binary strategies, and instant Telegram access.",
       },
-      { property: "og:title", content: "MNA Trader — AI Signal Bot for Pocket Option" },
+      { property: "og:title", content: "MNA Trader — AI Signals for Quotex and Tradevix" },
       {
         property: "og:description",
         content:
-          "MNA Trader AI signal bot: live OTC and market signals for Pocket Option with 56 pairs, strategy scanner and instant Telegram access.",
+          "MNA Trader AI signal bot for Quotex and Tradevix with 20 major currency pairs, forex and binary strategies, and instant Telegram access.",
       },
       { property: "og:type", content: "website" },
       { property: "og:url", content: "/" },
@@ -46,7 +54,7 @@ function Index() {
   const [licensed, setLicensed] = useState(false);
   const [menuOpen, setMenuOpen] = useState(false);
   const [tab, setTab] = useState<Tab>("dashboard");
-  const [mode, setMode] = useState<"otc" | "live">("otc");
+  const [broker, setBroker] = useState<Broker>("QUOTEX");
   const [pair, setPair] = useState(PAIRS[0]!.symbol);
   const [pickerOpen, setPickerOpen] = useState(false);
   const [timeframe, setTimeframe] = useState("1m");
@@ -114,12 +122,11 @@ function Index() {
 
   const dashboard = (
     <div className="space-y-4">
-      <Ticker />
       <div className="grid gap-4 xl:grid-cols-[1.45fr_0.9fr]">
         <div className="space-y-4">
           <div className="grid gap-4 sm:grid-cols-2">
-            <MarketModes mode={mode} onMode={setMode} />
-            <BrokerStatus />
+            <BrokerSelect broker={broker} onBroker={setBroker} />
+            <BrokerStatus broker={broker} />
           </div>
           <SignalEngine
             phase={phase}
@@ -160,9 +167,8 @@ function Index() {
             {tab === "dashboard" || tab === "bot" ? dashboard : null}
             {tab === "history" ? (
               <div className="space-y-3">
-                <Ticker />
                 <SignalList
-                  title="SIGNAL HISTORY"
+                  title="SIGNAL HISTORY · 2026"
                   signals={signals}
                   empty="No history yet — run the bot to collect signals."
                 />
@@ -170,14 +176,12 @@ function Index() {
             ) : null}
             {tab === "analytics" ? (
               <div className="space-y-3">
-                <Ticker />
                 <AnalyticsView signals={signals} />
                 <BacktestView />
               </div>
             ) : null}
             {tab === "settings" ? (
               <div className="space-y-3">
-                <Ticker />
                 <ThemePicker />
                 <SettingsView
                   toggles={toggles}

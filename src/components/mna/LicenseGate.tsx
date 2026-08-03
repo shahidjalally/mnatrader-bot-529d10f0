@@ -15,7 +15,7 @@ export function LicenseGate({ onUnlock }: { onUnlock: () => void }) {
   const steps = [
     {
       n: 1,
-      title: "Create Pocket Option Account",
+      title: "Create a Broker Account",
       sub: "Contact us on Telegram to get started",
       cta: "Open Telegram",
       href: TELEGRAM_URL,
@@ -25,7 +25,7 @@ export function LicenseGate({ onUnlock }: { onUnlock: () => void }) {
     {
       n: 2,
       title: "Deposit minimum $50",
-      sub: "Fund your Pocket Option account",
+      sub: "Fund your Quotex or Tradevix account",
       cta: "Deposit",
       href: BROKER_URL,
       Icon: CheckCircle2,
@@ -147,7 +147,7 @@ export function MenuSheet({ onClose }: { onClose: () => void }) {
           </a>
         </div>
         <p className="mt-3 text-center text-[10px] tracking-widest text-muted-foreground">
-          AI BOT v2.4 • Broker: Pocket Option
+          AI BOT v2.4 • Brokers: Quotex &amp; Tradevix
         </p>
       </div>
     </div>

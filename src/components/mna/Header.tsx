@@ -1,7 +1,6 @@
 import { Bell, Menu } from "lucide-react";
 import logo from "@/assets/mna-logo.png";
-import { BRAND, TICKER } from "@/lib/bot";
-import { TrendingUp } from "lucide-react";
+import { BRAND } from "@/lib/bot";
 
 export function AppHeader({ onMenu }: { onMenu: () => void }) {
   return (
@@ -26,7 +25,7 @@ export function AppHeader({ onMenu }: { onMenu: () => void }) {
       </div>
       <div className="hidden items-center gap-2 sm:flex">
         <span className="status-pill">
-          <span className="size-1.5 rounded-full bg-up" /> Markets live
+          <span className="size-1.5 rounded-full bg-up" /> AI online
         </span>
         <span className="text-xs text-muted-foreground">2,512 traders online</span>
       </div>
@@ -37,31 +36,5 @@ export function AppHeader({ onMenu }: { onMenu: () => void }) {
         <Menu className="size-5" />
       </button>
     </header>
-  );
-}
-
-export function Ticker() {
-  const row = [...TICKER, ...TICKER];
-  return (
-    <div className="overflow-hidden rounded-xl border border-border bg-foreground py-2.5 text-background shadow-sm">
-      <div className="marquee-track flex w-max">
-        {[0, 1].map((copy) => (
-          <div key={copy} className="flex shrink-0 items-center gap-6 pr-6">
-            {row.map((p, i) => (
-              <span
-                key={`${copy}-${i}`}
-                className="flex items-center gap-2 whitespace-nowrap text-xs"
-              >
-                <TrendingUp className={`size-3 ${p.up ? "text-up" : "text-down"}`} />
-                <span className="font-bold text-background">{p.symbol}</span>
-                <span className="text-background/50">OTC</span>
-                <span className={`font-bold ${p.up ? "text-up" : "text-down"}`}>WIN {p.win}%</span>
-                <span className="text-background/30">•</span>
-              </span>
-            ))}
-          </div>
-        ))}
-      </div>
-    </div>
   );
 }
