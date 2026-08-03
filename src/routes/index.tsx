@@ -12,7 +12,8 @@ import {
 } from "@/components/mna/Controls";
 import { SignalEngine } from "@/components/mna/SignalEngine";
 import { PairsGrid, Scanner, SignalList, Strategies } from "@/components/mna/Panels";
-import { AnalyticsView, SettingsView } from "@/components/mna/Views";
+import { AnalyticsView, SettingsView, ThemePicker } from "@/components/mna/Views";
+import { BacktestView } from "@/components/mna/Backtest";
 import { BottomNav, type Tab } from "@/components/mna/BottomNav";
 import { LicenseGate, MenuSheet } from "@/components/mna/LicenseGate";
 import { BRAND, PAIRS, SCANNER_STEPS, timeframeSeconds, type Risk, type Signal } from "@/lib/bot";
@@ -148,11 +149,13 @@ function Index() {
           <div className="space-y-3">
             <Ticker />
             <AnalyticsView signals={signals} />
+            <BacktestView />
           </div>
         ) : null}
         {tab === "settings" ? (
           <div className="space-y-3">
             <Ticker />
+            <ThemePicker />
             <SettingsView
               toggles={toggles}
               onToggle={(key) => setToggles((t) => ({ ...t, [key]: !t[key] }))}
