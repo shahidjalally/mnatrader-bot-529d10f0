@@ -4,7 +4,7 @@ MNA Trader is an AI-style trading signal dashboard for Pocket Option. It include
 
 ## Live website
 
-**GitHub Pages:** https://shahidjalally.github.io/mnatrader-bot-529d10f0/
+**Website:** https://bot.mnatrader.com/
 
 ## Local development
 

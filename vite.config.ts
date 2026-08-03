@@ -5,13 +5,10 @@ import { nitro } from "nitro/vite";
 import { defineConfig } from "vite";
 import tsConfigPaths from "vite-tsconfig-paths";
 
-const repositoryName = "mnatrader-bot-529d10f0";
-const isGitHubPagesBuild = process.env["GITHUB_ACTIONS"] === "true";
-
 export default defineConfig({
-  // GitHub project pages are served below /<repository>/ rather than at the
-  // domain root. Local development and other hosts continue to use `/`.
-  base: isGitHubPagesBuild ? `/${repositoryName}/` : "/",
+  // The production site is served from the root of bot.mnatrader.com. Using
+  // the repository path here makes every asset request 404 on that domain.
+  base: "/",
   plugins: [
     tailwindcss(),
     tsConfigPaths({ projects: ["./tsconfig.json"] }),
