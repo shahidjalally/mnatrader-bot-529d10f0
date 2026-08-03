@@ -3,11 +3,7 @@ import { BarChart2, Settings2, Palette } from "lucide-react";
 import { BRAND, SERVER_ID, type Signal } from "@/lib/bot";
 
 const THEMES: { id: string; label: string; swatch: string }[] = [
-  { id: "default", label: "Cyber Blue", swatch: "oklch(70% 0.18 232)" },
-  { id: "ember", label: "Ember", swatch: "oklch(70% 0.18 45)" },
-  { id: "emerald", label: "Emerald", swatch: "oklch(78% 0.17 160)" },
-  { id: "violet", label: "Violet", swatch: "oklch(74% 0.19 310)" },
-  { id: "gold", label: "Royal Gold", swatch: "oklch(83% 0.15 88)" },
+  { id: "default", label: "Editorial Lime", swatch: "oklch(83% 0.2 120)" },
 ];
 
 export function ThemePicker() {
@@ -15,7 +11,7 @@ export function ThemePicker() {
 
   useEffect(() => {
     const saved = localStorage.getItem("mna-theme") ?? "default";
-    setTheme(saved);
+    setTheme(THEMES.some((item) => item.id === saved) ? saved : "default");
   }, []);
 
   useEffect(() => {
@@ -31,7 +27,7 @@ export function ThemePicker() {
         <Palette className="size-4" /> THEME
       </h2>
       <p className="mb-3 text-[11px] text-muted-foreground">
-        Spin the terminal palette — every panel, glow and chart re-tints instantly.
+        Your workspace now uses the new high-contrast editorial palette.
       </p>
       <div className="grid grid-cols-2 gap-2">
         {THEMES.map((t) => (
@@ -59,9 +55,9 @@ export function ThemePicker() {
 export function AnalyticsView({ signals }: { signals: Signal[] }) {
   const total = signals.length;
   const calls = signals.filter((s) => s.direction === "CALL").length;
-  const winRate = total === 0 ? 0 : Math.round((signals.filter((s) => s.accuracy >= 90).length / total) * 100);
-  const avg =
-    total === 0 ? 0 : Math.round(signals.reduce((a, s) => a + s.accuracy, 0) / total);
+  const winRate =
+    total === 0 ? 0 : Math.round((signals.filter((s) => s.accuracy >= 90).length / total) * 100);
+  const avg = total === 0 ? 0 : Math.round(signals.reduce((a, s) => a + s.accuracy, 0) / total);
 
   const stats = [
     ["TOTAL SIGNALS", String(total)],
@@ -95,7 +91,9 @@ export function AnalyticsView({ signals }: { signals: Signal[] }) {
               points={signals
                 .slice()
                 .reverse()
-                .map((s, i) => `${(i / Math.max(1, total - 1)) * 320},${90 - (s.accuracy - 70) * 2.6}`)
+                .map(
+                  (s, i) => `${(i / Math.max(1, total - 1)) * 320},${90 - (s.accuracy - 70) * 2.6}`,
+                )
                 .join(" ")}
               fill="none"
               stroke="currentColor"

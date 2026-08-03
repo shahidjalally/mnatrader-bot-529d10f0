@@ -1,53 +1,48 @@
-import { LayoutGrid, History, Bot, BarChart2, Settings } from "lucide-react";
+import {
+  LayoutDashboard,
+  History,
+  Sparkles,
+  ChartNoAxesCombined,
+  Settings,
+  CircleHelp,
+} from "lucide-react";
 
 export type Tab = "dashboard" | "history" | "bot" | "analytics" | "settings";
 
-const ITEMS: { id: Tab; label: string; Icon: typeof LayoutGrid }[] = [
-  { id: "dashboard", label: "Dashboard", Icon: LayoutGrid },
+const ITEMS: { id: Tab; label: string; Icon: typeof LayoutDashboard }[] = [
+  { id: "dashboard", label: "Overview", Icon: LayoutDashboard },
   { id: "history", label: "History", Icon: History },
-  { id: "bot", label: "Bot", Icon: Bot },
-  { id: "analytics", label: "Analytics", Icon: BarChart2 },
+  { id: "bot", label: "Signal desk", Icon: Sparkles },
+  { id: "analytics", label: "Insights", Icon: ChartNoAxesCombined },
   { id: "settings", label: "Settings", Icon: Settings },
 ];
 
 export function BottomNav({ tab, onTab }: { tab: Tab; onTab: (t: Tab) => void }) {
   return (
-    <nav className="fixed inset-x-0 bottom-0 z-40 mx-auto max-w-md px-3 pb-3">
-      <div className="panel-glow relative flex items-end justify-between rounded-2xl px-4 py-2">
+    <nav className="mb-5 overflow-x-auto lg:mb-0 lg:w-56 lg:shrink-0">
+      <div className="flex min-w-max gap-1 rounded-2xl border border-border bg-card p-1.5 shadow-sm lg:min-w-0 lg:flex-col lg:p-3">
         {ITEMS.map(({ id, label, Icon }) => {
           const active = tab === id;
-          if (id === "bot") {
-            return (
-              <button
-                key={id}
-                type="button"
-                onClick={() => onTab(id)}
-                className="-mt-8 flex flex-col items-center gap-1"
-                aria-label="Bot"
-              >
-                <span className="glow-btn grid size-12 place-items-center rounded-full">
-                  <Icon className="size-6" />
-                </span>
-                <span className="text-[10px] text-muted-foreground">{label}</span>
-              </button>
-            );
-          }
           return (
             <button
               key={id}
               type="button"
               onClick={() => onTab(id)}
-              className="flex flex-col items-center gap-1 py-1"
+              className={`flex items-center gap-2.5 rounded-xl px-3 py-2.5 text-left transition-colors ${active ? "bg-foreground text-background" : "text-muted-foreground hover:bg-muted"}`}
             >
-              <Icon className={`size-5 ${active ? "text-primary" : "text-muted-foreground"}`} />
-              <span
-                className={`text-[10px] ${active ? "font-bold text-primary" : "text-muted-foreground"}`}
-              >
-                {label}
-              </span>
+              <Icon className={`size-4 ${active ? "text-primary" : ""}`} />
+              <span className="text-xs font-semibold">{label}</span>
             </button>
           );
         })}
+        <div className="mt-5 hidden border-t border-border pt-3 lg:block">
+          <p className="px-3 text-[10px] font-bold uppercase tracking-widest text-muted-foreground">
+            Workspace
+          </p>
+          <div className="mt-3 flex items-center gap-2 px-3 text-xs">
+            <CircleHelp className="size-4" /> Help center
+          </div>
+        </div>
       </div>
     </nav>
   );
