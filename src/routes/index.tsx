@@ -91,80 +91,103 @@ function Index() {
       timers.current.push(setTimeout(() => setScanSteps(i + 1), 350 * (i + 1)));
     });
     timers.current.push(
-      setTimeout(() => {
-        const meta = PAIRS.find((p) => p.symbol === pair) ?? PAIRS[0]!;
-        const next: Signal = {
-          id: `${Date.now()}`,
-          pair,
-          direction: Math.random() > 0.5 ? "CALL" : "PUT",
-          timeframe,
-          accuracy: Math.max(84, Math.min(99, meta.win + (risk === "High" ? -3 : 1))),
-          time: new Date().toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" }),
-        };
-        setSignal(next);
-        setSignals((prev) => [next, ...prev].slice(0, 25));
-        setPhase("signal");
-        setSecondsLeft(timeframeSeconds(timeframe));
-      }, 350 * SCANNER_STEPS.length + 600),
+      setTimeout(
+        () => {
+          const meta = PAIRS.find((p) => p.symbol === pair) ?? PAIRS[0]!;
+          const next: Signal = {
+            id: `${Date.now()}`,
+            pair,
+            direction: Math.random() > 0.5 ? "CALL" : "PUT",
+            timeframe,
+            accuracy: Math.max(84, Math.min(99, meta.win + (risk === "High" ? -3 : 1))),
+            time: new Date().toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" }),
+          };
+          setSignal(next);
+          setSignals((prev) => [next, ...prev].slice(0, 25));
+          setPhase("signal");
+          setSecondsLeft(timeframeSeconds(timeframe));
+        },
+        350 * SCANNER_STEPS.length + 600,
+      ),
     );
   }, [pair, risk, timeframe]);
 
   const dashboard = (
-    <div className="space-y-3">
+    <div className="space-y-4">
       <Ticker />
-      <MarketModes mode={mode} onMode={setMode} />
-      <BrokerStatus />
-      <SignalEngine phase={phase} signal={signal} secondsLeft={secondsLeft} strength={strength} />
-      <StartButton running={phase === "analyzing"} onStart={start} />
-      <PairSelect pair={pair} onChange={() => setPickerOpen(true)} />
-      <TimeframeRisk
-        timeframe={timeframe}
-        onTimeframe={setTimeframe}
-        risk={risk}
-        onRisk={setRisk}
-      />
-      <PairsGrid onSelect={setPair} />
-      <Strategies />
-      <Scanner activeSteps={phase === "standby" ? 4 : scanSteps} />
-      <SignalList title="RECENT SIGNALS" signals={signals} empty="No signals yet — start the bot." />
+      <div className="grid gap-4 xl:grid-cols-[1.45fr_0.9fr]">
+        <div className="space-y-4">
+          <div className="grid gap-4 sm:grid-cols-2">
+            <MarketModes mode={mode} onMode={setMode} />
+            <BrokerStatus />
+          </div>
+          <SignalEngine
+            phase={phase}
+            signal={signal}
+            secondsLeft={secondsLeft}
+            strength={strength}
+          />
+          <StartButton running={phase === "analyzing"} onStart={start} />
+          <SignalList
+            title="RECENT SIGNALS"
+            signals={signals}
+            empty="No signals yet — start the bot."
+          />
+        </div>
+        <div className="space-y-4">
+          <PairSelect pair={pair} onChange={() => setPickerOpen(true)} />
+          <TimeframeRisk
+            timeframe={timeframe}
+            onTimeframe={setTimeframe}
+            risk={risk}
+            onRisk={setRisk}
+          />
+          <Scanner activeSteps={phase === "standby" ? 4 : scanSteps} />
+          <Strategies />
+          <PairsGrid onSelect={setPair} />
+        </div>
+      </div>
     </div>
   );
 
   return (
     <div className="min-h-screen">
-      <main className="mx-auto max-w-md px-3 pb-28 pt-1">
+      <main className="mx-auto max-w-7xl px-4 pb-10 sm:px-6 lg:px-8">
         <AppHeader onMenu={() => setMenuOpen(true)} />
-        {tab === "dashboard" || tab === "bot" ? dashboard : null}
-        {tab === "history" ? (
-          <div className="space-y-3">
-            <Ticker />
-            <SignalList
-              title="SIGNAL HISTORY"
-              signals={signals}
-              empty="No history yet — run the bot to collect signals."
-            />
+        <div className="lg:flex lg:items-start lg:gap-6">
+          <BottomNav tab={tab} onTab={setTab} />
+          <div className="min-w-0 flex-1">
+            {tab === "dashboard" || tab === "bot" ? dashboard : null}
+            {tab === "history" ? (
+              <div className="space-y-3">
+                <Ticker />
+                <SignalList
+                  title="SIGNAL HISTORY"
+                  signals={signals}
+                  empty="No history yet — run the bot to collect signals."
+                />
+              </div>
+            ) : null}
+            {tab === "analytics" ? (
+              <div className="space-y-3">
+                <Ticker />
+                <AnalyticsView signals={signals} />
+                <BacktestView />
+              </div>
+            ) : null}
+            {tab === "settings" ? (
+              <div className="space-y-3">
+                <Ticker />
+                <ThemePicker />
+                <SettingsView
+                  toggles={toggles}
+                  onToggle={(key) => setToggles((t) => ({ ...t, [key]: !t[key] }))}
+                />
+              </div>
+            ) : null}
           </div>
-        ) : null}
-        {tab === "analytics" ? (
-          <div className="space-y-3">
-            <Ticker />
-            <AnalyticsView signals={signals} />
-            <BacktestView />
-          </div>
-        ) : null}
-        {tab === "settings" ? (
-          <div className="space-y-3">
-            <Ticker />
-            <ThemePicker />
-            <SettingsView
-              toggles={toggles}
-              onToggle={(key) => setToggles((t) => ({ ...t, [key]: !t[key] }))}
-            />
-          </div>
-        ) : null}
+        </div>
       </main>
-
-      <BottomNav tab={tab} onTab={setTab} />
       <PairPicker open={pickerOpen} onClose={() => setPickerOpen(false)} onSelect={setPair} />
       {menuOpen ? <MenuSheet onClose={() => setMenuOpen(false)} /> : null}
       {!licensed ? <LicenseGate onUnlock={() => setLicensed(true)} /> : null}
