@@ -10,14 +10,16 @@ export function SignalEngine({
   signal,
   secondsLeft,
   strength,
+  pair,
 }: {
   phase: "standby" | "analyzing" | "signal";
   signal: Signal | null;
   secondsLeft: number;
   strength: number;
+  pair: string;
 }) {
   const label =
-    phase === "standby" ? "STANDBY" : phase === "analyzing" ? "ANALYZING" : signal!.direction;
+    phase === "standby" ? "READY" : phase === "analyzing" ? "SCANNING" : signal!.direction;
   const isCall = signal?.direction === "CALL";
 
   return (
@@ -25,11 +27,11 @@ export function SignalEngine({
       <div className="flex items-start justify-between">
         <div>
           <h2 className="flex items-center gap-2 text-xl font-bold neon-cyan">
-            <Zap className="size-5" /> AI SIGNAL ENGINE
+            <Zap className="size-5" /> AI SIGNAL BOT
           </h2>
           <p className="text-xs text-muted-foreground">
             {phase === "standby"
-              ? "Engine on standby"
+              ? "Bot is ready"
               : phase === "analyzing"
                 ? "Scanning live market data"
                 : "Signal locked — execute now"}
@@ -68,7 +70,7 @@ export function SignalEngine({
           <p className="mt-2 text-xs leading-tight text-muted-foreground">
             {phase === "standby" ? (
               <>
-                Press START BOT
+                Press GET SIGNAL
                 <br />
                 to receive signals
               </>
@@ -101,9 +103,9 @@ export function SignalEngine({
         </div>
         <div>
           <p className="text-[10px] tracking-widest text-muted-foreground">PAIR</p>
-          <p className="mt-2 text-sm font-bold">{signal ? signal.pair : "—"}</p>
+          <p className="mt-2 text-sm font-bold neon-cyan">{signal ? signal.pair : pair}</p>
           <p className="text-[10px] text-muted-foreground">
-            {phase === "signal" ? signal!.timeframe : "Awaiting"}
+            {phase === "signal" ? signal!.timeframe : "Selected"}
           </p>
         </div>
         <div>
@@ -117,5 +119,50 @@ export function SignalEngine({
         </div>
       </div>
     </section>
+  );
+}
+
+export function MarketScanner({ pair }: { pair: string }) {
+  const candles = [34, 48, 29, 55, 42, 66, 51, 72, 61, 80, 68, 88];
+  return (
+    <div
+      className="fixed inset-0 z-40 grid place-items-center bg-background/75 p-4 backdrop-blur-sm"
+      role="status"
+      aria-live="polite"
+    >
+      <div className="panel-glow w-full max-w-sm rounded-2xl p-4 shadow-xl">
+        <div className="flex items-center justify-between">
+          <div>
+            <p className="font-display text-lg font-bold neon-cyan">AI MARKET SCANNER</p>
+            <p className="text-xs text-muted-foreground">Analyzing {pair} live candles</p>
+          </div>
+          <span className="size-2 animate-pulse rounded-full bg-up" />
+        </div>
+        <div className="relative mt-4 h-40 overflow-hidden rounded-xl border border-border bg-muted/40 px-3 py-4">
+          <div className="absolute inset-0 opacity-30 [background-image:linear-gradient(var(--color-border)_1px,transparent_1px),linear-gradient(90deg,var(--color-border)_1px,transparent_1px)] [background-size:32px_32px]" />
+          <div className="scan-line absolute inset-y-0 z-10 w-px bg-primary shadow-[0_0_16px_4px_var(--color-primary)]" />
+          <div className="relative flex h-full items-end justify-between gap-1">
+            {candles.map((height, index) => (
+              <span key={index} className="relative flex h-full flex-1 items-end justify-center">
+                <span
+                  className={`absolute w-px ${index % 3 === 0 ? "bg-down" : "bg-up"}`}
+                  style={{ height: `${height + 18}%` }}
+                />
+                <span
+                  className={`relative w-2 rounded-sm ${index % 3 === 0 ? "bg-down" : "bg-up"}`}
+                  style={{ height: `${height}%` }}
+                />
+              </span>
+            ))}
+          </div>
+        </div>
+        <div className="mt-3 flex items-center gap-2 text-xs font-bold tracking-widest text-primary">
+          <span className="h-1 flex-1 overflow-hidden rounded-full bg-muted">
+            <span className="scanner-progress block h-full bg-primary" />
+          </span>
+          SCANNING
+        </div>
+      </div>
+    </div>
   );
 }

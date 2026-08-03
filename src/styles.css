@@ -288,3 +288,29 @@
     transform: translateX(1000%);
   }
 }
+
+.scan-line {
+  animation: scanner-sweep 1.2s ease-in-out infinite alternate;
+}
+
+.scanner-progress {
+  animation: scanner-progress 4.8s linear forwards;
+}
+
+@keyframes scanner-sweep {
+  from {
+    left: 4%;
+  }
+  to {
+    left: 96%;
+  }
+}
+
+@keyframes scanner-progress {
+  from {
+    width: 0;
+  }
+  to {
+    width: 100%;
+  }
+}

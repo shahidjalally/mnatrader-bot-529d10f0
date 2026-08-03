@@ -145,12 +145,47 @@ export function TimeframeRisk({
   );
 }
 
+export function TimeframeSelect({
+  timeframe,
+  onTimeframe,
+}: {
+  timeframe: string;
+  onTimeframe: (t: string) => void;
+}) {
+  return (
+    <div className="panel-glow h-full rounded-xl p-3">
+      <p className="text-[10px] tracking-widest text-muted-foreground">SELECT TIME</p>
+      <p className="mt-1 text-sm">
+        Selected: <span className="font-bold neon-cyan">{timeframe}</span>
+      </p>
+      <div className="mt-2 flex flex-wrap gap-1.5">
+        {TIMEFRAMES.map((t) => (
+          <button
+            key={t}
+            type="button"
+            onClick={() => onTimeframe(t)}
+            className={`rounded-md border px-2 py-1 text-xs ${
+              t === timeframe
+                ? "border-primary bg-primary/15 font-bold text-primary ring-1 ring-primary/40"
+                : "border-border bg-muted/50 text-muted-foreground"
+            }`}
+          >
+            {t}
+          </button>
+        ))}
+      </div>
+    </div>
+  );
+}
+
 export function PairPicker({
   open,
+  selected,
   onClose,
   onSelect,
 }: {
   open: boolean;
+  selected: string;
   onClose: () => void;
   onSelect: (symbol: string) => void;
 }) {
@@ -177,7 +212,11 @@ export function PairPicker({
                 onSelect(p.symbol);
                 onClose();
               }}
-              className="rounded-lg border border-border bg-muted/50 px-3 py-2 text-left"
+              className={`rounded-lg border px-3 py-2 text-left ${
+                p.symbol === selected
+                  ? "border-primary bg-primary/15 ring-1 ring-primary/50"
+                  : "border-border bg-muted/50"
+              }`}
             >
               <span className="block text-sm font-bold">{p.symbol}</span>
               <span className={`block text-[10px] ${p.up ? "text-up" : "text-down"}`}>
@@ -201,9 +240,9 @@ export function StartButton({ running, onStart }: { running: boolean; onStart: (
         className="glow-btn flex w-full items-center justify-center gap-2 rounded-full py-4 font-display text-xl font-bold tracking-widest disabled:opacity-60"
       >
         {running ? <Zap className="size-5" /> : <Play className="size-5" />}
-        {running ? "BOT RUNNING" : "▶ START BOT"}
+        {running ? "SCANNING MARKET" : "GET SIGNAL"}
       </button>
-      <p className="mt-2 text-center text-xs text-muted-foreground">Activate Quantum Engine</p>
+      <p className="mt-2 text-center text-xs text-muted-foreground">Active AI Signal Bot</p>
     </div>
   );
 }

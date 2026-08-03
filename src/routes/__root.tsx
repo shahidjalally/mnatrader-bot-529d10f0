@@ -73,27 +73,27 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
     meta: [
       { charSet: "utf-8" },
       { name: "viewport", content: "width=device-width, initial-scale=1" },
-      { title: "MNA Trader — AI Signals for Quotex and Tradevix" },
+      { title: "MNA Trader — AI Signals for Quotex and TradoWix" },
       {
         name: "description",
         content:
-          "MNA Trader AI signal bot for Quotex and Tradevix with 20 major currency pairs, forex and binary strategies, and instant Telegram access.",
+          "MNA Trader AI signal bot for Quotex and TradoWix with major currency, gold, and Bitcoin pairs.",
       },
       { name: "author", content: "MNA Trader" },
       { property: "og:site_name", content: "MNA Trader" },
       { property: "og:type", content: "website" },
       { name: "twitter:card", content: "summary_large_image" },
-      { property: "og:title", content: "MNA Trader — AI Signals for Quotex and Tradevix" },
-      { name: "twitter:title", content: "MNA Trader — AI Signals for Quotex and Tradevix" },
+      { property: "og:title", content: "MNA Trader — AI Signals for Quotex and TradoWix" },
+      { name: "twitter:title", content: "MNA Trader — AI Signals for Quotex and TradoWix" },
       {
         property: "og:description",
         content:
-          "MNA Trader AI signal bot for Quotex and Tradevix with 20 major currency pairs, forex and binary strategies, and instant Telegram access.",
+          "MNA Trader AI signal bot for Quotex and TradoWix with major currency, gold, and Bitcoin pairs.",
       },
       {
         name: "twitter:description",
         content:
-          "MNA Trader AI signal bot for Quotex and Tradevix with 20 major currency pairs, forex and binary strategies, and instant Telegram access.",
+          "MNA Trader AI signal bot for Quotex and TradoWix with major currency, gold, and Bitcoin pairs.",
       },
     ],
     links: [
