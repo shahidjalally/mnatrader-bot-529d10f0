@@ -1,26 +1,26 @@
-# MNA Trader Link
+# MNA Trader
 
-I need it's replica 100% ditto copy https://Amirbot.lovable.app and it is my @connector:telegram:"Telegram" link https://t.me/mnatraderofficial12 as I want to divert traffic / audience to my @connector:telegram:"Telegram" channel. and brand it with MNA Trader instead Amirbot.
+MNA Trader is an AI-style trading signal dashboard for Pocket Option. It includes OTC and live market views, a strategy scanner, signal history, analytics, backtesting, and direct access to the MNA Trader Telegram channel.
 
-This project was built with [Lovable](https://lovable.dev).
+## Live website
 
-**Live app**: https://mnatrader-bot.lovable.app
+**GitHub Pages:** https://shahidjalally.github.io/mnatrader-bot-529d10f0/
 
-## Build with Lovable
+## Local development
 
-Continue developing this project in the [Lovable editor](https://lovable.dev/projects/cc95ba5f-19bb-48d4-aa85-a527d743ea05).
-
-- **Ship faster**: describe what you want to build and Lovable handles the code.
-- **Stay in sync**: every change made in Lovable is committed straight to this repository.
-- **Full ownership**: this code is yours. Push to `main` on GitHub and your changes sync back into Lovable, ready for your next prompt.
-
-## Development
-
-Prefer working locally? You need Node.js and npm — [install with nvm](https://github.com/nvm-sh/nvm#installing-and-updating).
+Requirements: Node.js 20 or newer and npm.
 
 ```sh
-git clone <this-repository-url>
-cd <repository-name>
-npm i
+npm install
 npm run dev
 ```
+
+The development server is available at http://localhost:8080.
+
+## Production build
+
+```sh
+npm run build
+```
+
+The build prerenders the application to `.output/public`. Pushes to the configured deployment branch are automatically published by the GitHub Pages workflow.
