@@ -155,7 +155,7 @@ export function SettingsView({
         ))}
       </ul>
       <p className="mt-3 text-center text-[10px] tracking-widest text-muted-foreground">
-        {BRAND} AI BOT v2.4 • Broker: Pocket Option • Server {SERVER_ID}
+        {BRAND} AI BOT v2.4 • Brokers: Quotex &amp; Tradevix • Server {SERVER_ID}
       </p>
     </section>
   );

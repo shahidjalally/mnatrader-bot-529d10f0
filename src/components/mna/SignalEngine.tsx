@@ -60,7 +60,9 @@ export function SignalEngine({
                 <TrendingDown className="size-10 text-down" />
               )
             ) : (
-              <Zap className={`size-8 text-primary ${phase === "analyzing" ? "animate-pulse" : ""}`} />
+              <Zap
+                className={`size-8 text-primary ${phase === "analyzing" ? "animate-pulse" : ""}`}
+              />
             )}
           </p>
           <p className="mt-2 text-xs leading-tight text-muted-foreground">

@@ -6,7 +6,7 @@ export function PairsGrid({ onSelect }: { onSelect: (s: string) => void }) {
     <section className="panel-glow rounded-2xl p-4">
       <div className="mb-3 flex items-center justify-between">
         <h2 className="flex items-center gap-2 text-lg font-bold neon-cyan">
-          <BarChart3 className="size-4" /> OTC PAIRS
+          <BarChart3 className="size-4" /> MAJOR CURRENCY PAIRS
         </h2>
         <span className="text-xs text-muted-foreground">{PAIRS.length} pairs</span>
       </div>
@@ -21,9 +21,11 @@ export function PairsGrid({ onSelect }: { onSelect: (s: string) => void }) {
             <div className="flex items-start justify-between">
               <div>
                 <p className="text-sm font-bold">{p.symbol}</p>
-                <p className="text-[10px] text-muted-foreground">(OTC {p.win}%)</p>
+                <p className="text-[10px] text-muted-foreground">Confidence {p.win}%</p>
               </div>
-              <span className={`text-xs ${p.up ? "text-up" : "text-down"}`}>{p.up ? "▲" : "▼"}</span>
+              <span className={`text-xs ${p.up ? "text-up" : "text-down"}`}>
+                {p.up ? "▲" : "▼"}
+              </span>
             </div>
             <svg viewBox="0 0 160 60" className="mt-1 h-8 w-full" aria-hidden="true">
               <polyline
@@ -45,14 +47,16 @@ export function Strategies() {
   return (
     <section className="panel-glow rounded-2xl p-4">
       <h2 className="mb-3 flex items-center gap-2 text-lg font-bold neon-cyan">
-        <Zap className="size-4" /> STRATEGIES IN USE
+        <Zap className="size-4" /> FOREX &amp; BINARY STRATEGIES
       </h2>
       <ul className="space-y-2">
         {STRATEGIES.map(([name, state]) => (
           <li key={name} className="flex items-center gap-2 text-sm">
             <CheckCircle2 className="size-4 text-primary" />
             <span className="flex-1 tracking-wide">{name}</span>
-            <span className={`text-xs font-bold ${state === "CONFIRMED" ? "text-down" : "text-up"}`}>
+            <span
+              className={`text-xs font-bold ${state === "CONFIRMED" ? "text-down" : "text-up"}`}
+            >
               {state}
             </span>
           </li>
@@ -66,7 +70,7 @@ export function Scanner({ activeSteps }: { activeSteps: number }) {
   return (
     <section className="panel-glow rounded-2xl p-4">
       <h2 className="mb-3 flex items-center gap-2 text-lg font-bold neon-cyan">
-        <Activity className="size-4" /> MARKET SCANNER
+        <Activity className="size-4" /> AI ALGORITHM
       </h2>
       <ul className="space-y-2">
         {SCANNER_STEPS.map((step, i) => (
