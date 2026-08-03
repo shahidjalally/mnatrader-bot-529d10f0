@@ -194,9 +194,30 @@
 }
 
 @utility glow-btn {
-  background: var(--color-foreground);
+  background: var(--color-primary);
   color: var(--color-primary-foreground);
-  box-shadow: 0 8px 20px oklch(20% 0.02 75 / 0.16);
+  box-shadow: 0 8px 20px color-mix(in oklch, var(--color-primary) 28%, transparent);
+  transition:
+    filter 150ms ease,
+    box-shadow 150ms ease,
+    transform 150ms ease;
+}
+
+@media (hover: hover) {
+  .glow-btn:hover:not(:disabled) {
+    filter: brightness(1.04) saturate(1.08);
+    box-shadow: 0 10px 24px color-mix(in oklch, var(--color-primary) 38%, transparent);
+    transform: translateY(-1px);
+  }
+}
+
+.glow-btn:focus-visible {
+  outline: 2px solid var(--color-ring);
+  outline-offset: 3px;
+}
+
+.glow-btn:active:not(:disabled) {
+  transform: translateY(0);
 }
 
 @utility icon-button {
