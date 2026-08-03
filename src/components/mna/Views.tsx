@@ -1,5 +1,60 @@
-import { BarChart2, Settings2 } from "lucide-react";
+import { useEffect, useState } from "react";
+import { BarChart2, Settings2, Palette } from "lucide-react";
 import { BRAND, SERVER_ID, type Signal } from "@/lib/bot";
+
+const THEMES: { id: string; label: string; swatch: string }[] = [
+  { id: "default", label: "Cyber Blue", swatch: "oklch(70% 0.18 232)" },
+  { id: "ember", label: "Ember", swatch: "oklch(70% 0.18 45)" },
+  { id: "emerald", label: "Emerald", swatch: "oklch(78% 0.17 160)" },
+  { id: "violet", label: "Violet", swatch: "oklch(74% 0.19 310)" },
+  { id: "gold", label: "Royal Gold", swatch: "oklch(83% 0.15 88)" },
+];
+
+export function ThemePicker() {
+  const [theme, setTheme] = useState("default");
+
+  useEffect(() => {
+    const saved = localStorage.getItem("mna-theme") ?? "default";
+    setTheme(saved);
+  }, []);
+
+  useEffect(() => {
+    const root = document.documentElement;
+    if (theme === "default") root.removeAttribute("data-theme");
+    else root.setAttribute("data-theme", theme);
+    localStorage.setItem("mna-theme", theme);
+  }, [theme]);
+
+  return (
+    <section className="panel-glow rounded-2xl p-4">
+      <h2 className="mb-1 flex items-center gap-2 text-lg font-bold neon-cyan">
+        <Palette className="size-4" /> THEME
+      </h2>
+      <p className="mb-3 text-[11px] text-muted-foreground">
+        Spin the terminal palette — every panel, glow and chart re-tints instantly.
+      </p>
+      <div className="grid grid-cols-2 gap-2">
+        {THEMES.map((t) => (
+          <button
+            key={t.id}
+            type="button"
+            onClick={() => setTheme(t.id)}
+            aria-pressed={theme === t.id}
+            className={`flex items-center gap-2 rounded-lg border p-2.5 text-left transition-colors ${
+              theme === t.id ? "border-primary bg-primary/15" : "border-border bg-muted/50"
+            }`}
+          >
+            <span
+              className="size-5 shrink-0 rounded-full"
+              style={{ background: t.swatch, boxShadow: `0 0 12px ${t.swatch}` }}
+            />
+            <span className="text-xs font-bold tracking-wide">{t.label}</span>
+          </button>
+        ))}
+      </div>
+    </section>
+  );
+}
 
 export function AnalyticsView({ signals }: { signals: Signal[] }) {
   const total = signals.length;
