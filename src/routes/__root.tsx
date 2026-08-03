@@ -7,12 +7,10 @@ import {
   HeadContent,
   Scripts,
 } from "@tanstack/react-router";
-import { useEffect, type ReactNode } from "react";
+import type { ReactNode } from "react";
 
 import "../styles.css";
 import appCss from "../styles.css?url";
-
-import { reportLovableError } from "../lib/lovable-error-reporting";
 
 function NotFoundComponent() {
   return (
@@ -39,10 +37,6 @@ function NotFoundComponent() {
 function ErrorComponent({ error, reset }: { error: Error; reset: () => void }) {
   console.error(error);
   const router = useRouter();
-  useEffect(() => {
-    reportLovableError(error, { boundary: "tanstack_root_error_component" });
-  }, [error]);
-
   return (
     <div className="flex min-h-screen items-center justify-center bg-background px-4">
       <div className="max-w-md text-center">
@@ -82,7 +76,8 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
       { title: "MNA Trader — AI Signal Bot for Pocket Option" },
       {
         name: "description",
-        content: "MNA Trader AI signal bot: live OTC and market signals for Pocket Option with 56 pairs, strategy scanner and instant Telegram access.",
+        content:
+          "MNA Trader AI signal bot: live OTC and market signals for Pocket Option with 56 pairs, strategy scanner and instant Telegram access.",
       },
       { name: "author", content: "MNA Trader" },
       { property: "og:site_name", content: "MNA Trader" },
@@ -90,10 +85,16 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
       { name: "twitter:card", content: "summary_large_image" },
       { property: "og:title", content: "MNA Trader — AI Signal Bot for Pocket Option" },
       { name: "twitter:title", content: "MNA Trader — AI Signal Bot for Pocket Option" },
-      { property: "og:description", content: "MNA Trader AI signal bot: live OTC and market signals for Pocket Option with 56 pairs, strategy scanner and instant Telegram access." },
-      { name: "twitter:description", content: "MNA Trader AI signal bot: live OTC and market signals for Pocket Option with 56 pairs, strategy scanner and instant Telegram access." },
-      { property: "og:image", content: "https://pub-bb2e103a32db4e198524a2e9ed8f35b4.r2.dev/a7cbc5d5-9d61-4b62-a637-4334c799bf11/id-preview-7371322a--cc95ba5f-19bb-48d4-aa85-a527d743ea05.lovable.app-1785662813401.png" },
-      { name: "twitter:image", content: "https://pub-bb2e103a32db4e198524a2e9ed8f35b4.r2.dev/a7cbc5d5-9d61-4b62-a637-4334c799bf11/id-preview-7371322a--cc95ba5f-19bb-48d4-aa85-a527d743ea05.lovable.app-1785662813401.png" },
+      {
+        property: "og:description",
+        content:
+          "MNA Trader AI signal bot: live OTC and market signals for Pocket Option with 56 pairs, strategy scanner and instant Telegram access.",
+      },
+      {
+        name: "twitter:description",
+        content:
+          "MNA Trader AI signal bot: live OTC and market signals for Pocket Option with 56 pairs, strategy scanner and instant Telegram access.",
+      },
     ],
     links: [
       {
@@ -106,7 +107,7 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
         rel: "stylesheet",
         href: "https://fonts.googleapis.com/css2?family=Orbitron:wght@400..900&family=Rajdhani:wght@400;500;600;700&display=swap",
       },
-      { rel: "icon", type: "image/png", href: "/favicon.png" },
+      { rel: "icon", type: "image/png", href: `${import.meta.env.BASE_URL}favicon.png` },
     ],
   }),
 
