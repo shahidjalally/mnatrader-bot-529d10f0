@@ -3,18 +3,14 @@ import { useCallback, useEffect, useRef, useState } from "react";
 
 import { AppHeader } from "@/components/mna/Header";
 import {
-  BrokerStatus,
   BrokerSelect,
   PairPicker,
   PairSelect,
   StartButton,
-  TimeframeRisk,
+  TimeframeSelect,
 } from "@/components/mna/Controls";
-import { SignalEngine } from "@/components/mna/SignalEngine";
+import { MarketScanner, SignalEngine } from "@/components/mna/SignalEngine";
 import { PairsGrid, Scanner, SignalList, Strategies } from "@/components/mna/Panels";
-import { AnalyticsView, SettingsView, ThemePicker } from "@/components/mna/Views";
-import { BacktestView } from "@/components/mna/Backtest";
-import { BottomNav, type Tab } from "@/components/mna/BottomNav";
 import { LicenseGate, MenuSheet } from "@/components/mna/LicenseGate";
 import {
   BRAND,
@@ -29,17 +25,17 @@ import {
 export const Route = createFileRoute("/")({
   head: () => ({
     meta: [
-      { title: "MNA Trader — AI Signals for Quotex and Tradevix" },
+      { title: "MNA Trader — AI Signals for Quotex and TradoWix" },
       {
         name: "description",
         content:
-          "MNA Trader AI signal bot for Quotex and Tradevix with 20 major currency pairs, forex and binary strategies, and instant Telegram access.",
+          "MNA Trader AI signal bot for Quotex and TradoWix with major currency, gold, and Bitcoin pairs.",
       },
-      { property: "og:title", content: "MNA Trader — AI Signals for Quotex and Tradevix" },
+      { property: "og:title", content: "MNA Trader — AI Signals for Quotex and TradoWix" },
       {
         property: "og:description",
         content:
-          "MNA Trader AI signal bot for Quotex and Tradevix with 20 major currency pairs, forex and binary strategies, and instant Telegram access.",
+          "MNA Trader AI signal bot for Quotex and TradoWix with major currency, gold, and Bitcoin pairs.",
       },
       { property: "og:type", content: "website" },
       { property: "og:url", content: "/" },
@@ -53,12 +49,11 @@ export const Route = createFileRoute("/")({
 function Index() {
   const [licensed, setLicensed] = useState(false);
   const [menuOpen, setMenuOpen] = useState(false);
-  const [tab, setTab] = useState<Tab>("dashboard");
   const [broker, setBroker] = useState<Broker>("QUOTEX");
   const [pair, setPair] = useState(PAIRS[0]!.symbol);
   const [pickerOpen, setPickerOpen] = useState(false);
   const [timeframe, setTimeframe] = useState("1m");
-  const [risk, setRisk] = useState<Risk>("Moderate");
+  const [risk] = useState<Risk>("Moderate");
 
   const [phase, setPhase] = useState<"standby" | "analyzing" | "signal">("standby");
   const [secondsLeft, setSecondsLeft] = useState(0);
@@ -66,11 +61,6 @@ function Index() {
   const [scanSteps, setScanSteps] = useState(4);
   const [signal, setSignal] = useState<Signal | null>(null);
   const [signals, setSignals] = useState<Signal[]>([]);
-  const [toggles, setToggles] = useState<Record<string, boolean>>({
-    sound: true,
-    popup: true,
-    vibration: false,
-  });
 
   const timers = useRef<ReturnType<typeof setTimeout>[]>([]);
   useEffect(() => () => timers.current.forEach(clearTimeout), []);
@@ -96,7 +86,7 @@ function Index() {
     setPhase("analyzing");
     setScanSteps(0);
     SCANNER_STEPS.forEach((_, i) => {
-      timers.current.push(setTimeout(() => setScanSteps(i + 1), 350 * (i + 1)));
+      timers.current.push(setTimeout(() => setScanSteps(i + 1), 600 * (i + 1)));
     });
     timers.current.push(
       setTimeout(
@@ -115,42 +105,39 @@ function Index() {
           setPhase("signal");
           setSecondsLeft(timeframeSeconds(timeframe));
         },
-        350 * SCANNER_STEPS.length + 600,
+        600 * SCANNER_STEPS.length + 600,
       ),
     );
   }, [pair, risk, timeframe]);
 
   const dashboard = (
-    <div className="space-y-4">
-      <div className="grid gap-4 xl:grid-cols-[1.45fr_0.9fr]">
+    <div className="mx-auto max-w-4xl space-y-4">
+      <BrokerSelect broker={broker} onBroker={setBroker} />
+      <div className="grid items-stretch gap-4 sm:grid-cols-2">
+        <TimeframeSelect timeframe={timeframe} onTimeframe={setTimeframe} />
+        <PairSelect pair={pair} onChange={() => setPickerOpen(true)} />
+      </div>
+      <div>
+        <SignalEngine
+          phase={phase}
+          signal={signal}
+          secondsLeft={secondsLeft}
+          strength={strength}
+          pair={pair}
+        />
+        <StartButton running={phase === "analyzing"} onStart={start} />
+      </div>
+      <div className="grid gap-4 lg:grid-cols-2">
         <div className="space-y-4">
-          <div className="grid gap-4 sm:grid-cols-2">
-            <BrokerSelect broker={broker} onBroker={setBroker} />
-            <BrokerStatus broker={broker} />
-          </div>
-          <SignalEngine
-            phase={phase}
-            signal={signal}
-            secondsLeft={secondsLeft}
-            strength={strength}
-          />
-          <StartButton running={phase === "analyzing"} onStart={start} />
           <SignalList
             title="RECENT SIGNALS"
             signals={signals}
-            empty="No signals yet — start the bot."
+            empty="No signals yet — press GET SIGNAL."
           />
+          <Strategies />
         </div>
         <div className="space-y-4">
-          <PairSelect pair={pair} onChange={() => setPickerOpen(true)} />
-          <TimeframeRisk
-            timeframe={timeframe}
-            onTimeframe={setTimeframe}
-            risk={risk}
-            onRisk={setRisk}
-          />
           <Scanner activeSteps={phase === "standby" ? 4 : scanSteps} />
-          <Strategies />
           <PairsGrid onSelect={setPair} />
         </div>
       </div>
@@ -161,38 +148,15 @@ function Index() {
     <div className="min-h-screen">
       <main className="mx-auto max-w-7xl px-4 pb-10 sm:px-6 lg:px-8">
         <AppHeader onMenu={() => setMenuOpen(true)} />
-        <div className="lg:flex lg:items-start lg:gap-6">
-          <BottomNav tab={tab} onTab={setTab} />
-          <div className="min-w-0 flex-1">
-            {tab === "dashboard" || tab === "bot" ? dashboard : null}
-            {tab === "history" ? (
-              <div className="space-y-3">
-                <SignalList
-                  title="SIGNAL HISTORY · 2026"
-                  signals={signals}
-                  empty="No history yet — run the bot to collect signals."
-                />
-              </div>
-            ) : null}
-            {tab === "analytics" ? (
-              <div className="space-y-3">
-                <AnalyticsView signals={signals} />
-                <BacktestView />
-              </div>
-            ) : null}
-            {tab === "settings" ? (
-              <div className="space-y-3">
-                <ThemePicker />
-                <SettingsView
-                  toggles={toggles}
-                  onToggle={(key) => setToggles((t) => ({ ...t, [key]: !t[key] }))}
-                />
-              </div>
-            ) : null}
-          </div>
-        </div>
+        {dashboard}
       </main>
-      <PairPicker open={pickerOpen} onClose={() => setPickerOpen(false)} onSelect={setPair} />
+      <PairPicker
+        open={pickerOpen}
+        selected={pair}
+        onClose={() => setPickerOpen(false)}
+        onSelect={setPair}
+      />
+      {phase === "analyzing" ? <MarketScanner pair={pair} /> : null}
       {menuOpen ? <MenuSheet onClose={() => setMenuOpen(false)} /> : null}
       {!licensed ? <LicenseGate onUnlock={() => setLicensed(true)} /> : null}
       <h2 className="sr-only">{BRAND} AI signal bot</h2>

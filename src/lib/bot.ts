@@ -1,8 +1,10 @@
-export const TELEGRAM_URL = "https://t.me/mnatraderofficial12";
-export const BROKER_URL = "https://broker-qx.pro/sign-up/?lid=2103061";
+export const TELEGRAM_URL = "https://t.me/mna_trader_1";
+export const QUOTEX_URL = "https://broker-qx.pro/sign-up/?lid=2103061";
+export const TRADOWIX_URL = "https://tradowix.com/register?lid=56627618";
+export const BROKER_URL = QUOTEX_URL;
 export const BRAND = "MNA TRADER";
 export const SERVER_ID = "MNA-01";
-export const BROKERS = ["QUOTEX", "TRADEVIX"] as const;
+export const BROKERS = ["QUOTEX", "TRADOWIX"] as const;
 export type Broker = (typeof BROKERS)[number];
 
 export type Pair = {
@@ -12,6 +14,8 @@ export type Pair = {
 };
 
 const RAW: [string, number][] = [
+  ["XAU/USD", 96],
+  ["BTC/USD", 93],
   ["EUR/USD", 94],
   ["NZD/USD", 92],
   ["USD/CAD", 95],

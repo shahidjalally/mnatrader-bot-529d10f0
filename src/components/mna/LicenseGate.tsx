@@ -1,6 +1,6 @@
 import { KeyRound, Send, CheckCircle2, Rocket, X } from "lucide-react";
 import { useEffect, useState } from "react";
-import { BRAND, BROKER_URL, TELEGRAM_URL } from "@/lib/bot";
+import { BRAND, QUOTEX_URL, TELEGRAM_URL, TRADOWIX_URL } from "@/lib/bot";
 
 export function LicenseGate({ onUnlock }: { onUnlock: () => void }) {
   const [key, setKey] = useState("");
@@ -15,19 +15,21 @@ export function LicenseGate({ onUnlock }: { onUnlock: () => void }) {
   const steps = [
     {
       n: 1,
-      title: "Create a Broker Account",
-      sub: "Contact us on Telegram to get started",
-      cta: "Open Telegram",
-      href: TELEGRAM_URL,
-      Icon: Send,
+      title: "Create Your Account",
+      sub: "Create a Quotex or TradoWix account",
+      links: [
+        { cta: "Quotex", href: QUOTEX_URL },
+        { cta: "TradoWix", href: TRADOWIX_URL },
+      ],
+      Icon: Rocket,
       tone: "primary" as const,
     },
     {
       n: 2,
       title: "Deposit minimum $50",
-      sub: "Fund your Quotex or Tradevix account",
+      sub: "Fund your Quotex or TradoWix account",
       cta: "Deposit",
-      href: BROKER_URL,
+      links: [{ cta: "Deposit", href: QUOTEX_URL }],
       Icon: CheckCircle2,
       tone: "up" as const,
     },
@@ -36,7 +38,7 @@ export function LicenseGate({ onUnlock }: { onUnlock: () => void }) {
       title: "Send Trader ID to Admin",
       sub: "Share your ID on Telegram to receive your key",
       cta: "Contact",
-      href: TELEGRAM_URL,
+      links: [{ cta: "Contact", href: TELEGRAM_URL }],
       Icon: Send,
       tone: "muted" as const,
     },
@@ -62,7 +64,7 @@ export function LicenseGate({ onUnlock }: { onUnlock: () => void }) {
         </div>
 
         <div className="mt-4 space-y-2">
-          {steps.map(({ n, title, sub, cta, href, Icon, tone }) => (
+          {steps.map(({ n, title, sub, links, Icon, tone }) => (
             <div
               key={n}
               className="flex items-center gap-3 rounded-xl border border-border bg-muted/50 p-3"
@@ -74,21 +76,25 @@ export function LicenseGate({ onUnlock }: { onUnlock: () => void }) {
                 <span className="block text-sm font-bold">{title}</span>
                 <span className="block text-[11px] text-muted-foreground">{sub}</span>
               </span>
-              <a
-                href={href}
-                target="_blank"
-                rel="noopener noreferrer"
-                className={`flex shrink-0 items-center gap-1.5 rounded-full px-3 py-2 text-xs font-bold ${
-                  tone === "primary"
-                    ? "glow-btn"
-                    : tone === "up"
-                      ? "border border-up/50 bg-up/10 text-up"
-                      : "border border-border bg-background/80 text-foreground"
-                }`}
-              >
-                <Icon className="size-3.5" />
-                {cta}
-              </a>
+              <span className="flex shrink-0 flex-col gap-1 sm:flex-row">
+                {links.map(({ cta, href }) => (
+                  <a
+                    key={cta}
+                    href={href}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className={`flex items-center justify-center gap-1 rounded-full px-2.5 py-2 text-[11px] font-bold ${
+                      tone === "primary"
+                        ? "glow-btn"
+                        : tone === "up"
+                          ? "border border-up/50 bg-up/10 text-up"
+                          : "border border-border bg-background/80 text-foreground"
+                    }`}
+                  >
+                    <Icon className="size-3.5" /> {cta}
+                  </a>
+                ))}
+              </span>
             </div>
           ))}
         </div>
@@ -111,7 +117,7 @@ export function LicenseGate({ onUnlock }: { onUnlock: () => void }) {
           <Rocket className="size-5" /> Activate Bot
         </button>
         <p className="mt-3 text-center text-[10px] tracking-widest text-muted-foreground">
-          {BRAND} AI BOT v2.4
+          {BRAND} AI BOT v1.0
         </p>
       </div>
     </div>
@@ -138,16 +144,24 @@ export function MenuSheet({ onClose }: { onClose: () => void }) {
             <Send className="size-4" /> Join Telegram Channel
           </a>
           <a
-            href={BROKER_URL}
+            href={QUOTEX_URL}
             target="_blank"
             rel="noopener noreferrer"
             className="flex items-center justify-center gap-2 rounded-xl border border-up/50 bg-up/10 py-3 font-bold text-up"
           >
-            <CheckCircle2 className="size-4" /> Create Broker Account
+            <CheckCircle2 className="size-4" /> Create Quotex Account
+          </a>
+          <a
+            href={TRADOWIX_URL}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="flex items-center justify-center gap-2 rounded-xl border border-up/50 bg-up/10 py-3 font-bold text-up"
+          >
+            <CheckCircle2 className="size-4" /> Create TradoWix Account
           </a>
         </div>
         <p className="mt-3 text-center text-[10px] tracking-widest text-muted-foreground">
-          AI BOT v2.4 • Brokers: Quotex &amp; Tradevix
+          AI BOT v1.0 • Brokers: Quotex &amp; TradoWix
         </p>
       </div>
     </div>
