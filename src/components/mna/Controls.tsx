@@ -1,5 +1,12 @@
-import { Box, ChevronDown, Zap, Play, Target } from "lucide-react";
+import { ChevronDown, Zap, Play, Target } from "lucide-react";
 import { BROKERS, PAIRS, SERVER_ID, TIMEFRAMES, RISKS, type Broker, type Risk } from "@/lib/bot";
+import quotexLogo from "@/assets/Qoutex-Logo.png";
+import tradoWixLogo from "@/assets/Tradeowix-Logo.png";
+
+const BROKER_LOGOS: Record<Broker, string> = {
+  QUOTEX: quotexLogo,
+  TRADOWIX: tradoWixLogo,
+};
 
 export function BrokerSelect({
   broker,
@@ -21,8 +28,12 @@ export function BrokerSelect({
               active ? "border-primary! ring-1 ring-primary/60" : ""
             }`}
           >
-            <span className="grid size-8 shrink-0 place-items-center rounded-md bg-primary/10 text-primary">
-              <Box className="size-4" />
+            <span className="grid size-8 shrink-0 place-items-center overflow-hidden rounded-md bg-white p-1">
+              <img
+                src={BROKER_LOGOS[item]}
+                alt={`${item} logo`}
+                className="size-full object-contain"
+              />
             </span>
             <span className="min-w-0">
               <span
@@ -45,8 +56,12 @@ export function BrokerStatus({ broker }: { broker: Broker }) {
       <div className="panel-glow rounded-xl px-3 py-3">
         <p className="text-[10px] tracking-widest text-muted-foreground">BROKER</p>
         <div className="mt-2 flex items-center gap-2">
-          <span className="grid size-5 place-items-center rounded bg-primary/20 text-[10px] font-bold text-primary">
-            P
+          <span className="grid size-7 shrink-0 place-items-center overflow-hidden rounded bg-white p-0.5">
+            <img
+              src={BROKER_LOGOS[broker]}
+              alt={`${broker} logo`}
+              className="size-full object-contain"
+            />
           </span>
           <span className="flex-1 text-sm font-bold">{broker}</span>
         </div>
