@@ -21,6 +21,18 @@ export function SignalEngine({
   const label =
     phase === "standby" ? "READY" : phase === "analyzing" ? "SCANNING" : signal!.direction;
   const isCall = signal?.direction === "CALL";
+  const signalRing =
+    phase === "signal"
+      ? isCall
+        ? "border-up/30 border-t-up/90"
+        : "border-down/30 border-t-down/90"
+      : "border-primary/20 border-t-primary/80";
+  const signalRingReverse =
+    phase === "signal"
+      ? isCall
+        ? "border-up/30 border-b-up/70"
+        : "border-down/30 border-b-down/70"
+      : "border-primary/20 border-b-primary/60";
 
   return (
     <section className="panel-glow rounded-2xl p-4">
@@ -43,9 +55,15 @@ export function SignalEngine({
       </div>
 
       <div className="relative mx-auto mt-5 grid size-56 place-items-center">
-        <span className="absolute inset-0 rounded-full border border-primary/25" />
-        <span className="ring-spin absolute inset-3 rounded-full border border-t-primary/80 border-primary/20" />
-        <span className="ring-spin-rev absolute inset-8 rounded-full border border-b-primary/60 border-primary/20" />
+        <span
+          className={`absolute inset-0 rounded-full border ${
+            phase === "signal" ? (isCall ? "border-up/35" : "border-down/35") : "border-primary/25"
+          }`}
+        />
+        <span className={`ring-spin absolute inset-3 rounded-full border ${signalRing}`} />
+        <span
+          className={`ring-spin-rev absolute inset-8 rounded-full border ${signalRingReverse}`}
+        />
         <div className="text-center">
           <p
             className={`font-display text-sm font-bold tracking-widest ${
