@@ -11,7 +11,7 @@ import {
 } from "@/components/mna/Controls";
 import { MarketScanner, SignalEngine } from "@/components/mna/SignalEngine";
 import { PairsGrid, Scanner, SignalList, Strategies } from "@/components/mna/Panels";
-import { LicenseGate, MenuSheet } from "@/components/mna/LicenseGate";
+import { LicenseGate, LicenseRequired, MenuSheet } from "@/components/mna/LicenseGate";
 import {
   BRAND,
   PAIRS,
@@ -21,6 +21,7 @@ import {
   type Risk,
   type Signal,
 } from "@/lib/bot";
+import { clearStoredLicense, validateLicense, validateStoredLicense } from "@/lib/license";
 
 export const Route = createFileRoute("/")({
   head: () => ({
@@ -48,6 +49,8 @@ export const Route = createFileRoute("/")({
 
 function Index() {
   const [licensed, setLicensed] = useState(false);
+  const [licenseGateOpen, setLicenseGateOpen] = useState(true);
+  const [licenseRequiredOpen, setLicenseRequiredOpen] = useState(false);
   const [menuOpen, setMenuOpen] = useState(false);
   const [broker, setBroker] = useState<Broker>("QUOTEX");
   const [pair, setPair] = useState(PAIRS[0]!.symbol);
@@ -64,6 +67,15 @@ function Index() {
 
   const timers = useRef<ReturnType<typeof setTimeout>[]>([]);
   useEffect(() => () => timers.current.forEach(clearTimeout), []);
+
+  useEffect(() => {
+    void validateStoredLicense().then((result) => {
+      if (result.valid) {
+        setLicensed(true);
+        setLicenseGateOpen(false);
+      }
+    });
+  }, []);
 
   useEffect(() => {
     const id = setInterval(() => {
@@ -110,6 +122,27 @@ function Index() {
     );
   }, [pair, risk, timeframe]);
 
+  const requestSignal = useCallback(async () => {
+    const result = await validateStoredLicense();
+    if (!result.valid) {
+      clearStoredLicense();
+      setLicensed(false);
+      setLicenseRequiredOpen(true);
+      return;
+    }
+    setLicensed(true);
+    start();
+  }, [start]);
+
+  const activateLicense = useCallback(async (key: string) => {
+    const result = await validateLicense(key);
+    if (!result.valid) return result.reason;
+    setLicensed(true);
+    setLicenseGateOpen(false);
+    setLicenseRequiredOpen(false);
+    return null;
+  }, []);
+
   const dashboard = (
     <div className="mx-auto max-w-4xl space-y-4">
       <BrokerSelect broker={broker} onBroker={setBroker} />
@@ -125,7 +158,7 @@ function Index() {
           strength={strength}
           pair={pair}
         />
-        <StartButton running={phase === "analyzing"} onStart={start} />
+        <StartButton running={phase === "analyzing"} onStart={() => void requestSignal()} />
       </div>
       <div className="grid gap-4 lg:grid-cols-2">
         <div className="space-y-4">
@@ -158,7 +191,18 @@ function Index() {
       />
       {phase === "analyzing" ? <MarketScanner pair={pair} /> : null}
       {menuOpen ? <MenuSheet onClose={() => setMenuOpen(false)} /> : null}
-      {!licensed ? <LicenseGate onUnlock={() => setLicensed(true)} /> : null}
+      {!licensed && licenseGateOpen ? (
+        <LicenseGate onActivate={activateLicense} onSkip={() => setLicenseGateOpen(false)} />
+      ) : null}
+      {!licenseGateOpen && licenseRequiredOpen ? (
+        <LicenseRequired
+          onClose={() => setLicenseRequiredOpen(false)}
+          onGetLicense={() => {
+            setLicenseRequiredOpen(false);
+            setLicenseGateOpen(true);
+          }}
+        />
+      ) : null}
       <h2 className="sr-only">{BRAND} AI signal bot</h2>
     </div>
   );
