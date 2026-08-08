@@ -42,9 +42,22 @@ if (action === "add") {
   lines[index] = columns.join(",");
   await writeFile(databaseUrl, `${lines.join("\n")}\n`);
   console.log("License revoked.");
+} else if (action === "verify" && suppliedKey) {
+  const prefix = `${hash(suppliedKey)},`;
+  const record = lines.find((line) => line.startsWith(prefix));
+  if (!record) throw new Error("License was not found.");
+  const [, status, expiresAt = ""] = record.split(",");
+  if (status.trim().toLowerCase() !== "active") throw new Error("License is not active.");
+  if (expiresAt) {
+    const expiry = new Date(`${expiresAt}T23:59:59.999Z`);
+    if (Number.isNaN(expiry.getTime()) || expiry.getTime() < Date.now()) {
+      throw new Error("License has expired.");
+    }
+  }
+  console.log(`License is valid${expiresAt ? ` through ${expiresAt}` : " with no expiry"}.`);
 } else {
   console.error(
-    "Usage:\n  npm run license:add -- KEY [YYYY-MM-DD] [label]\n  npm run license:add -- --generate [YYYY-MM-DD] [label]\n  npm run license:revoke -- KEY",
+    "Usage:\n  npm run license:add -- KEY [YYYY-MM-DD] [label]\n  npm run license:add -- --generate [YYYY-MM-DD] [label]\n  npm run license:revoke -- KEY\n  npm run license:verify -- KEY",
   );
   process.exitCode = 1;
 }

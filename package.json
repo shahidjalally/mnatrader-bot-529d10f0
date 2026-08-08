@@ -11,7 +11,8 @@
     "lint": "eslint .",
     "format": "prettier --write .",
     "license:add": "node scripts/manage-license.mjs add",
-    "license:revoke": "node scripts/manage-license.mjs revoke"
+    "license:revoke": "node scripts/manage-license.mjs revoke",
+    "license:verify": "node scripts/manage-license.mjs verify"
   },
   "dependencies": {
     "@hookform/resolvers": "^5.2.2",
