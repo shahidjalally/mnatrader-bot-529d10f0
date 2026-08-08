@@ -1,10 +1,18 @@
-import { KeyRound, Send, CheckCircle2, Rocket, X } from "lucide-react";
+import { KeyRound, Send, CheckCircle2, LockKeyhole, Rocket, X } from "lucide-react";
 import { useEffect, useState } from "react";
 import { BRAND, QUOTEX_URL, TELEGRAM_URL, TRADOWIX_URL } from "@/lib/bot";
 
-export function LicenseGate({ onUnlock }: { onUnlock: () => void }) {
+export function LicenseGate({
+  onActivate,
+  onSkip,
+}: {
+  onActivate: (key: string) => Promise<string | null>;
+  onSkip: () => void;
+}) {
   const [key, setKey] = useState("");
   const [countdown, setCountdown] = useState(3);
+  const [error, setError] = useState("");
+  const [checking, setChecking] = useState(false);
 
   useEffect(() => {
     if (countdown <= 0) return;
@@ -55,7 +63,7 @@ export function LicenseGate({ onUnlock }: { onUnlock: () => void }) {
           ) : (
             <button
               type="button"
-              onClick={onUnlock}
+              onClick={onSkip}
               className="mt-1 inline-flex items-center gap-1 text-xs font-bold text-primary"
             >
               <X className="size-3" /> Skip for now
@@ -104,21 +112,79 @@ export function LicenseGate({ onUnlock }: { onUnlock: () => void }) {
         </p>
         <input
           value={key}
-          onChange={(e) => setKey(e.target.value)}
+          onChange={(e) => {
+            setKey(e.target.value);
+            setError("");
+          }}
           placeholder="XXXX-XXXX-XXXX-XXXX"
           aria-label="License key"
           className="mt-2 w-full rounded-xl border border-border bg-muted/50 px-4 py-3 text-center tracking-[0.3em] text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-1 focus:ring-ring"
         />
         <button
           type="button"
-          onClick={onUnlock}
-          className="glow-btn mt-3 flex w-full items-center justify-center gap-2 rounded-xl py-3 font-display text-lg font-bold tracking-widest"
+          disabled={checking}
+          onClick={async () => {
+            setChecking(true);
+            const message = await onActivate(key);
+            setError(message ?? "");
+            setChecking(false);
+          }}
+          className="glow-btn mt-3 flex w-full items-center justify-center gap-2 rounded-xl py-3 font-display text-lg font-bold tracking-widest disabled:opacity-60"
         >
-          <Rocket className="size-5" /> Activate Bot
+          <Rocket className="size-5" /> {checking ? "Checking License…" : "Activate Bot"}
         </button>
+        {error ? (
+          <p role="alert" className="mt-2 text-center text-xs font-semibold text-down">
+            {error}
+          </p>
+        ) : null}
         <p className="mt-3 text-center text-[10px] tracking-widest text-muted-foreground">
           {BRAND} AI BOT v1.0
         </p>
+      </div>
+    </div>
+  );
+}
+
+export function LicenseRequired({
+  onClose,
+  onGetLicense,
+}: {
+  onClose: () => void;
+  onGetLicense: () => void;
+}) {
+  return (
+    <div
+      className="fixed inset-0 z-50 grid place-items-center bg-background/85 p-4 backdrop-blur-sm"
+      role="dialog"
+      aria-modal="true"
+      aria-labelledby="license-required-title"
+    >
+      <div className="panel-glow w-full max-w-sm rounded-2xl p-5 text-center">
+        <span className="mx-auto grid size-12 place-items-center rounded-full bg-primary/15 text-primary">
+          <LockKeyhole className="size-6" />
+        </span>
+        <h2 id="license-required-title" className="mt-3 text-xl font-bold neon-cyan">
+          Valid License Required
+        </h2>
+        <p className="mt-2 text-sm text-muted-foreground">
+          You can explore the dashboard without a license, but you must activate a valid license
+          before requesting a trading signal.
+        </p>
+        <button
+          type="button"
+          onClick={onGetLicense}
+          className="glow-btn mt-5 flex w-full items-center justify-center gap-2 rounded-xl py-3 font-bold"
+        >
+          <KeyRound className="size-4" /> Enter License Key
+        </button>
+        <button
+          type="button"
+          onClick={onClose}
+          className="mt-3 text-xs font-bold tracking-widest text-muted-foreground"
+        >
+          CONTINUE EXPLORING
+        </button>
       </div>
     </div>
   );

@@ -1,0 +1,2 @@
+key_hash,status,expires_at,label
+# Add licenses with: npm run license:add -- XXXX-XXXX-XXXX-XXXX 2027-12-31 Customer
