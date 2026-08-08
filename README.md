@@ -50,6 +50,12 @@ Revoke a key:
 npm run license:revoke -- XXXX-XXXX-XXXX-XXXX
 ```
 
+Confirm that a key is present, active, and unexpired before sending it to a customer:
+
+```sh
+npm run license:verify -- XXXX-XXXX-XXXX-XXXX
+```
+
 Commit and push the updated CSV to publish the change. Visitors may skip the initial license screen
 and explore the dashboard, but **GET SIGNAL** validates the saved key against the latest CSV before
 generating a signal. Because GitHub Pages is a static host, this browser-side license gate is suitable
